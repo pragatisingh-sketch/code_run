@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <spring-boot.run.jvmArguments>-Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration</spring-boot.run.jvmArguments>
     </properties>
 
     <dependencies>
