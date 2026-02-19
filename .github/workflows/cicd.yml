@@ -42,4 +42,6 @@ jobs:
         region: asia-south1
         project_id: divine-quest-459017-j2
         image: docker.io/${{ secrets.DOCKER_USERNAME }}/springboot-app
-        port: 8080
+        env_vars: |
+          SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+          SERVER_PORT=8080
