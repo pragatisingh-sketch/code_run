@@ -18,14 +18,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    # ✅ Build JAR from the correct folder (update this path to where your pom.xml is)
     - name: Build JAR
-      run: mvn clean package -DskipTests
+      run: mvn -f student-management-system/pom.xml clean package -DskipTests
 
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
+    # ✅ Build Docker image
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springboot-app .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springboot-app ./student-management-system
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/springboot-app
@@ -38,7 +40,8 @@ jobs:
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v2
       with:
-        service: springboot-service       # 1️⃣ Service name
-        region: asia-south1               # 2️⃣ Region
-        project_id: divine-quest-459017-j2  # 3️⃣ Project ID
+        service: springboot-service         # Service name
+        region: asia-south1                 # Region
+        project_id: divine-quest-459017-j2 # Project ID
         image: docker.io/${{ secrets.DOCKER_USERNAME }}/springboot-app
+        port: 8080                          # Make sure Cloud Run knows which port to use
