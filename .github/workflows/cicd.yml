@@ -12,8 +12,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: List files (Debug)
-      run: ls -R   # Optional: check the repo structure during CI
+    - name: List repo files (Debug)
+      run: ls -R   # Optional: helps confirm folder names in workflow logs
 
     - name: Set up Java 17
       uses: actions/setup-java@v4
@@ -21,16 +21,16 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Build JAR from the correct folder
+    # ✅ Build JAR from correct folder
     - name: Build JAR
-      run: mvn -f student-management-system/pom.xml clean package -DskipTests
+      run: mvn -f Spring_boot_CRUD-main/pom.xml clean package -DskipTests
 
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    # Build Docker image
+    # ✅ Build Docker image
     - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springboot-app ./student-management-system
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springboot-app ./Spring_boot_CRUD-main
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/springboot-app
@@ -43,9 +43,8 @@ jobs:
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v2
       with:
-        service: springboot-service
-        region: asia-south1
-        project_id: divine-quest-459017-j2
+        service: springboot-service         # Cloud Run service name
+        region: asia-south1                 # Region
+        project_id: divine-quest-459017-j2 # Project ID
         image: docker.io/${{ secrets.DOCKER_USERNAME }}/springboot-app
-        port: 8080
-
+        port: 8080                          # Must match the port your app exposes
