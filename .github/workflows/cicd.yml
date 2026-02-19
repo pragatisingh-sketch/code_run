@@ -38,6 +38,7 @@ jobs:
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v2
       with:
-        service: springboot-service
-        region: asia-south1
+        service: springboot-service       # 1️⃣ Service name
+        region: asia-south1               # 2️⃣ Region
+        project_id: divine-quest-459017-j2  # 3️⃣ Project ID
         image: docker.io/${{ secrets.DOCKER_USERNAME }}/springboot-app
